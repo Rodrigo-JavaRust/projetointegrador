@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="S-MART — Sua lista de compras inteligente. Encontre o supermercado mais barato.">
+    <meta name="theme-color" content="#2D8B47">
+    <title>S-MART | Sua lista de compras inteligente</title>
+
+    <!-- Bootstrap 5 (local) -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Bootstrap Icons (local) -->
+    <link rel="stylesheet" href="css/bootstrap-icons.css">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ================== NAVBAR ================== -->
+    <nav class="navbar navbar-expand-lg navbar-smart fixed-top" aria-label="Navegação principal">
+        <div class="container-fluid container-xl">
+
+            <!-- Hamburger toggler (left on mobile) -->
+            <button class="navbar-toggler order-1" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navMain"
+                    aria-controls="navMain" aria-expanded="false" aria-label="Abrir menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Brand -->
+            <a class="navbar-brand order-2 mx-lg-0" href="#">
+                <span class="brand-mark" aria-hidden="true">S</span><span class="brand-rest">-MART</span>
+            </a>
+
+            <!-- Cart icon shown on mobile (always visible) -->
+            <button class="btn btn-cart btn-cart-mobile d-lg-none order-3 ms-auto" type="button"
+                    id="cartBtnMobile" aria-label="Abrir minha lista de compras">
+                <i class="bi bi-cart3" aria-hidden="true"></i>
+                <span class="cart-badge hidden" id="cartBadgeMobile" aria-live="polite">0</span>
+            </button>
+
+            <!-- Collapsible content -->
+            <div class="collapse navbar-collapse order-4 order-lg-3" id="navMain">
+
+                <!-- Nav links -->
+                <ul class="navbar-nav me-lg-auto ms-lg-3 mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">
+                            <i class="bi bi-house-door d-lg-none me-2"></i>Início
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-list-check d-lg-none me-2"></i>Minha Lista
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-tag d-lg-none me-2"></i>Comparar Preços
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="bi bi-shop d-lg-none me-2"></i>Mercados
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Search -->
+                <form class="search-form me-lg-3" role="search" id="searchForm" onsubmit="return false;">
+                    <i class="bi bi-search search-icon" aria-hidden="true"></i>
+                    <input class="form-control search-input" type="search"
+                           placeholder="Buscar produto ou categoria..."
+                           aria-label="Buscar" id="searchInput" autocomplete="off">
+                </form>
+
+                <!-- Cart icon (desktop) -->
+                <button class="btn btn-cart d-none d-lg-inline-flex" type="button"
+                        id="cartBtn" aria-label="Abrir minha lista de compras">
+                    <i class="bi bi-cart3" aria-hidden="true"></i>
+                    <span class="cart-label">Lista</span>
+                    <span class="cart-badge hidden" id="cartBadge" aria-live="polite">0</span>
+                </button>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- ================== MAIN ================== -->
+    <main class="main-content">
+        <div class="container container-xl">
+
+            <header class="page-header">
+                <p class="eyebrow">Página inicial</p>
+                <h1 class="page-title">O que você precisa hoje?</h1>
+                <p class="page-subtitle">
+                    Toque em uma categoria para ver os produtos e adicioná-los à sua lista de compras.
+                    No final, mostraremos o supermercado mais barato para você.
+                </p>
+            </header>
+
+            <!-- Sections list (rendered by JS) -->
+            <section aria-label="Categorias do supermercado">
+                <div class="sections-list" id="sectionsList"></div>
+                <p class="no-results hidden" id="noResults">
+                    <i class="bi bi-search"></i>
+                    Nenhuma categoria encontrada para sua busca.
+                </p>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- ================== CART OFFCANVAS ================== -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas"
+         aria-labelledby="cartOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="cartOffcanvasLabel">
+                <i class="bi bi-cart3" aria-hidden="true"></i> Minha Lista
+                <span class="cart-count-pill hidden" id="cartCountPill">0</span>
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Fechar"></button>
+        </div>
+
+        <div class="offcanvas-body">
+            <div id="cartItems"></div>
+            <div id="cartEmpty" class="cart-empty">
+                <i class="bi bi-cart3" aria-hidden="true"></i>
+                <p>Sua lista está vazia</p>
+                <small>Adicione produtos das categorias para começar.</small>
+            </div>
+        </div>
+
+        <div class="offcanvas-footer hidden" id="cartFooter">
+            <button class="btn btn-outline-danger btn-sm w-100 mb-2" type="button" id="clearBtn">
+                <i class="bi bi-trash"></i> Limpar lista
+            </button>
+            <button class="btn btn-primary w-100" type="button" id="compareBtn">
+                Comparar preços <i class="bi bi-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+
+    <!-- Bootstrap JS (local) -->
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <!-- App script -->
+    <script src="js/script.js"></script>
+</body>
+</html>
